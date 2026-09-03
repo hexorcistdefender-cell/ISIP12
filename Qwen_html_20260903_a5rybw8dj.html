@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Индустриальный колледж 12 ИСиП — Информационные системы и программирование</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%2300ffa3%22/><text x=%2250%22 y=%2268%22 font-size=%2255%22 font-weight=%22900%22 text-anchor=%22middle%22 fill=%22%23000%22 font-family=%22monospace%22>12</text></svg>">
+<style>
+  :root {
+    --фон: #0a0e1a;
+    --фон-2: #111827;
+    --карточка: rgba(17, 24, 39, 0.7);
+    --акцент: #00ffa3;
+    --акцент-2: #7c3aed;
+    --акцент-3: #06b6d4;
+    --текст: #e5e7eb;
+    --приглушенный: #9ca3af;
+    --граница: rgba(0, 255, 163, 0.2);
+    --свечение: 0 0 20px rgba(0, 255, 163, 0.4);
+  }
+  [data-theme="light"] {
+    --фон: #f3f4f6;
+    --фон-2: #ffffff;
+    --карточка: rgba(255, 255, 255, 0.8);
+    --текст: #111827;
+    --приглушенный: #4b5563;
+    --граница: rgba(124, 58, 237, 0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--фон);
+    color: var(--текст);
+    overflow-x: hidden;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  .матрица-фон {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    opacity: 0.08;
+    pointer-events: none;
+  }
+
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+    background: rgba(10, 14, 26, 0.7);
+    border-bottom: 1px solid var(--граница);
+    transition: all 0.3s;
+  }
+  [data-theme="light"] header { background: rgba(255, 255, 255, 0.7); }
+
+  .нав-контейнер {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .лого {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .лого-иконка {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--акцент), var(--акцент-2));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    font-weight: 900;
+    font-size: 1rem;
+    box-shadow: var(--свечение);
+    flex-shrink: 0;
+  }
+  .лого-текст {
+    font-size: 1.15rem;
+    white-space: nowrap;
+  }
+  .лого-текст span { color: var(--акцент); }
+
+  nav ul {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  nav a {
+    color: var(--текст);
+    text-decoration: none;
+    font-size: 0.95rem;
+    position: relative;
+    transition: color 0.3s;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  nav a::before { content: '> '; color: var(--акцент); }
+  nav a:hover { color: var(--акцент); }
+  nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0;
+    width: 0; height: 2px;
+    background: var(--акцент);
+    transition: width 0.3s;
+  }
+  nav a:hover::after { width: 100%; }
+
+  .действия-шапки { display: flex; gap: 1rem; align-items: center; }
+  .кнопка-темы, .кнопка-меню {
+    background: transparent;
+    border: 1px solid var(--граница);
+    color: var(--текст);
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+  }
+  .кнопка-темы:hover, .кнопка-меню:hover {
+    border-color: var(--акцент);
+    box-shadow: var(--свечение);
+  }
+  .кнопка-меню { display: none; }
+
+  .герой {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 6rem 2rem 2rem;
+  }
+  .герой-контейнер {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+  .герой-бейдж {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 255, 163, 0.1);
+    border: 1px solid var(--граница);
+    border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--акцент);
+    margin-bottom: 1.5rem;
+  }
+  .герой-бейдж::before {
+    content: '';
+    width: 8px; height: 8px;
+    background: var(--акцент);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--акцент);
+    animation: пульсация 2s infinite;
+  }
+  @keyframes пульсация {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .герой h1 {
+    font-size: clamp(2.2rem, 4.5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, var(--текст) 0%, var(--акцент) 50%, var(--акцент-3) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .герой .печать { color: var(--акцент); -webkit-text-fill-color: var(--акцент); }
+  .герой p {
+    font-size: 1.15rem;
+    color: var(--приглушенный);
+    margin-bottom: 2rem;
+    max-width: 500px;
+  }
+  .герой-кнопки { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .кнопка {
+    padding: 0.9rem 1.8rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+    font-size: 0.95rem;
+    border: 1px solid transparent;
+  }
+  .кнопка-основная {
+    background: linear-gradient(135deg, var(--акцент), var(--акцент-3));
+    color: #000;
+    box-shadow: var(--свечение);
+  }
+  .кнопка-основная:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(0, 255, 163, 0.6);
+  }
+  .кнопка-вторичная {
+    background: transparent;
+    color: var(--текст);
+    border-color: var(--граница);
+  }
+  .кнопка-вторичная:hover {
+    border-color: var(--акцент);
+    color: var(--акцент);
+  }
+
+  .терминал {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 255, 163, 0.1);
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+  }
+  .терминал-шапка {
+    background: #161b22;
+    padding: 0.8rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid #30363d;
+  }
+  .терминал-точка {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+  }
+  .терминал-точка.красная { background: #ff5f56; }
+  .терминал-точка.желтая { background: #ffbd2e; }
+  .терминал-точка.зеленая { background: #27c93f; }
+  .терминал-заголовок {
+    margin-left: auto;
+    color: #8b949e;
+    font-size: 0.85rem;
+  }
+  .терминал-тело {
+    padding: 1.5rem;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    min-height: 280px;
+  }
+  .терминал-строка { color: #c9d1d9; }
+  .терминал-строка .приглашение { color: var(--акцент); }
+  .терминал-строка .команда { color: #79c0ff; }
+  .терминал-строка .вывод { color: #8b949e; }
+  .терминал-строка .успех { color: var(--акцент); }
+  .курсор {
+    display: inline-block;
+    width: 8px; height: 16px;
+    background: var(--акцент);
+    animation: мигание 1s infinite;
+    vertical-align: middle;
+  }
+  @keyframes мигание {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+
+  section {
+    padding: 6rem 2rem;
+    position: relative;
+    z-index: 1;
+  }
+  .секция-контейнер {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .секция-заголовок {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+  .секция-тег {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--акцент);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+  .секция-название {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+  }
+  .секция-подзаголовок {
+    color: var(--приглушенный);
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .о-нас-сетка {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  .стат-карточка {
+    background: var(--карточка);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--граница);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .стат-карточка::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(90deg, var(--акцент), var(--акцент-2));
+  }
+  .стат-карточка:hover {
+    transform: translateY(-5px);
+    border-color: var(--акцент);
+    box-shadow: var(--свечение);
+  }
+  .стат-число {
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--акцент), var(--акцент-3));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .стат-подпись {
+    color: var(--приглушенный);
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  .фильтры {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+  .кнопка-фильтр {
+    padding: 0.6rem 1.2rem;
+    background: transparent;
+    border: 1px solid var(--граница);
+    color: var(--текст);
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    transition: all 0.3s;
+  }
+  .кнопка-фильтр:hover, .кнопка-фильтр.активная {
+    background: var(--акцент);
+    color: #000;
+    border-color: var(--акцент);
+    box-shadow: var(--свечение);
+  }
+
+  .группы-сетка {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .группа-карточка {
+    background: var(--карточка);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--граница);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .группа-карточка:hover {
+    transform: translateY(-5px);
+    border-color: var(--акцент);
+    box-shadow: var(--свечение);
+  }
+  .группа-шапка {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 1rem;
+  }
+  .группа-имя {
+    font-size: 1.3rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--акцент);
+  }
+  .группа-курс {
+    padding: 0.2rem 0.6rem;
+    background: rgba(124, 58, 237, 0.2);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    color: var(--акцент-2);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .группа-инфо {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: var(--приглушенный);
+    font-size: 0.9rem;
+  }
+  .группа-инфо div { display: flex; align-items: center; gap: 0.5rem; }
+
+  /* ===== РАСПИСАНИЕ ===== */
+  .расписание-управление {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  .расписание-выбор-группы {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .переключатель-недели {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .переключатель-недели label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--приглушенный);
+  }
+  .переключатель {
+    position: relative;
+    width: 50px;
+    height: 26px;
+  }
+  .переключатель input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .ползунок {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--граница);
+    border-radius: 26px;
+    transition: 0.3s;
+  }
+  .ползунок::before {
+    content: '';
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background: var(--акцент);
+    border-radius: 50%;
+    transition: 0.3s;
+  }
+  .переключатель input:checked + .ползунок {
+    background: rgba(0, 255, 163, 0.3);
+  }
+  .переключатель input:checked + .ползунок::before {
+    transform: translateX(24px);
+  }
+
+  .таблица-расписания-обертка {
+    background: var(--карточка);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--граница);
+    border-radius: 16px;
+    overflow: hidden;
+    overflow-x: auto;
+  }
+  .таблица-расписания {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+  }
+  .таблица-расписания th, .таблица-расписания td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--граница);
+  }
+  .таблица-расписания th {
+    background: rgba(0, 255, 163, 0.05);
+    color: var(--акцент);
+    font-weight: 600;
+  }
+  .таблица-расписания tr:hover td { background: rgba(0, 255, 163, 0.03); }
+  .время-пары { color: var(--акцент-3); font-weight: 600; white-space: nowrap; }
+  .название-пары { color: var(--текст); }
+  .номер-кабинета {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background: rgba(124, 58, 237, 0.2);
+    border-radius: 6px;
+    color: var(--акцент-2);
+    font-size: 0.8rem;
+  }
+  .строка-перерыва td {
+    background: rgba(0, 255, 163, 0.03);
+    color: var(--приглушенный);
+    font-style: italic;
+    text-align: center;
+    padding: 0.5rem;
+  }
+
+  .кабинеты-сетка {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  .кабинет-карточка {
+    background: var(--карточка);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--граница);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .кабинет-карточка:hover {
+    transform: translateY(-5px);
+    border-color: var(--акцент);
+    box-shadow: var(--свечение);
+  }
+  .номер-кабинета-крупно {
+    font-size: 2.5rem;
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--акцент);
+    margin-bottom: 0.5rem;
+  }
+  .название-кабинета {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .статус-кабинета {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+    margin-top: 0.5rem;
+  }
+  .статус-кабинета.свободен {
+    background: rgba(0, 255, 163, 0.15);
+    color: var(--акцент);
+  }
+  .статус-кабинета.занят {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+  }
+  .статус-кабинета::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 8px currentColor;
+  }
+
+  .преподаватели-сетка {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  .преподаватель-карточка {
+    background: var(--карточка);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--граница);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    transition: all 0.3s;
+  }
+  .преподаватель-карточка:hover {
+    transform: translateY(-5px);
+    border-color: var(--акцент);
+    box-shadow: var(--свечение);
+  }
+  .преподаватель-аватар {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--акцент), var(--акцент-2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    font-weight: 800;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  .преподаватель-инфо h4 { font-size: 1.1rem; margin-bottom: 0.3rem; }
+  .преподаватель-инфо .предмет {
+    color: var(--акцент);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
+  }
+  .преподаватель-инфо .опыт {
+    color: var(--приглушенный);
+    font-size: 0.85rem;
+  }
+
+  footer {
+    background: var(--фон-2);
+    border-top: 1px solid var(--граница);
+    padding: 3rem 2rem 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+  .футер-контейнер {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 2rem;
+  }
+  .футер-колонка h5 {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--акцент);
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+  .футер-колонка ul { list-style: none; }
+  .футер-колонка li { margin-bottom: 0.5rem; }
+  .футер-колонка a {
+    color: var(--приглушенный);
+    text-decoration: none;
+    transition: color 0.3s;
+    font-size: 0.9rem;
+  }
+  .футер-колонка a:hover { color: var(--акцент); }
+  .футер-низ {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--граница);
+    text-align: center;
+    color: var(--приглушенный);
+    font-size: 0.85rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .модальное-окно {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 2rem;
+  }
+  .модальное-окно.активно { display: flex; }
+  .модальное-содержимое {
+    background: var(--фон-2);
+    border: 1px solid var(--граница);
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 100%;
+    position: relative;
+    animation: появление-модалки 0.3s;
+  }
+  @keyframes появление-модалки {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .кнопка-закрытия-модалки {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    background: transparent;
+    border: none;
+    color: var(--текст);
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  .модальное-окно h3 {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--акцент);
+    margin-bottom: 1rem;
+  }
+
+  @media (max-width: 900px) {
+    .герой-контейнер { grid-template-columns: 1fr; }
+    .футер-контейнер { grid-template-columns: 1fr 1fr; }
+    .лого-текст { font-size: 0.95rem; }
+    nav ul {
+      position: fixed;
+      top: 70px; left: 0; right: 0;
+      background: var(--фон-2);
+      flex-direction: column;
+      padding: 2rem;
+      gap: 1.5rem;
+      border-bottom: 1px solid var(--граница);
+      transform: translateY(-150%);
+      transition: transform 0.3s;
+    }
+    nav ul.активно { transform: translateY(0); }
+    .кнопка-меню { display: flex; }
+  }
+  @media (max-width: 600px) {
+    .футер-контейнер { grid-template-columns: 1fr; }
+    section { padding: 4rem 1rem; }
+    .таблица-расписания { font-size: 0.8rem; }
+    .таблица-расписания th, .таблица-расписания td { padding: 0.6rem; }
+    .лого-текст { font-size: 0.85rem; }
+    .лого-иконка { width: 34px; height: 34px; font-size: 0.85rem; }
+  }
+
+  .плавное-появление {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s;
+  }
+  .плавное-появление.видимый {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<canvas class="матрица-фон" id="матрица"></canvas>
+
+<header>
+  <div class="нав-контейнер">
+    <div class="лого">
+      <div class="лого-иконка">12</div>
+      <div class="лого-текст">Индустриальный колледж <span>12 ИСиП</span></div>
+    </div>
+    <nav>
+      <ul id="менюНавигации">
+        <li><a href="#герой">Главная</a></li>
+        <li><a href="#о-нас">О нас</a></li>
+        <li><a href="#группы">Группы</a></li>
+        <li><a href="#расписание">Расписание</a></li>
+        <li><a href="#кабинеты">Кабинеты</a></li>
+        <li><a href="#преподаватели">Преподаватели</a></li>
+      </ul>
+    </nav>
+    <div class="действия-шапки">
+      <button class="кнопка-темы" id="кнопкаТемы" title="Сменить тему">🌙</button>
+      <button class="кнопка-меню" id="кнопкаМеню">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- ГЛАВНАЯ -->
+<section class="герой" id="герой">
+  <div class="герой-контейнер">
+    <div>
+      <div class="герой-бейдж">Набор 2026 открыт</div>
+      <h1>Индустриальный колледж<br><span class="печать" id="печатающийсяТекст">12 ИСиП</span></h1>
+      <p>Информационные системы и программирование. Готовим IT-специалистов нового поколения. Кодим, создаём, развиваемся.</p>
+      <div class="герой-кнопки">
+        <a href="#группы" class="кнопка кнопка-основная">→ Смотреть группы</a>
+        <a href="#о-нас" class="кнопка кнопка-вторичная">Узнать больше</a>
+      </div>
+    </div>
+    <div class="терминал">
+      <div class="терминал-шапка">
+        <div class="терминал-точка красная"></div>
+        <div class="терминал-точка желтая"></div>
+        <div class="терминал-точка зеленая"></div>
+        <div class="терминал-заголовок">~/kolledzh-12 — bash</div>
+      </div>
+      <div class="терминал-тело" id="терминалТело">
+        <div class="терминал-строка"><span class="приглашение">student@college:~$</span> <span class="команда">./запуск.sh</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- О НАС -->
+<section id="о-нас">
+  <div class="секция-контейнер">
+    <div class="секция-заголовок плавное-появление">
+      <div class="секция-тег">// о_нас</div>
+      <h2 class="секция-название">О нашем колледже</h2>
+      <p class="секция-подзаголовок">Более 30 лет готовим специалистов для IT-индустрии. Современные лаборатории, опытные преподаватели, реальные проекты.</p>
+    </div>
+    <div class="о-нас-сетка">
+      <div class="стат-карточка плавное-появление">
+        <div class="стат-число" data-цель="30">0</div>
+        <div class="стат-подпись">Лет опыта</div>
+      </div>
+      <div class="стат-карточка плавное-появление">
+        <div class="стат-число" data-цель="1200">0</div>
+        <div class="стат-подпись">Студентов</div>
+      </div>
+      <div class="стат-карточка плавное-появление">
+        <div class="стат-число" data-цель="45">0</div>
+        <div class="стат-подпись">Преподавателей</div>
+      </div>
+      <div class="стат-карточка плавное-появление">
+        <div class="стат-число" data-цель="98">0</div>
+        <div class="стат-подпись">% трудоустройства</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ГРУППЫ -->
+<section id="группы">
+  <div class="секция-контейнер">
+    <div class="секция-заголовок плавное-появление">
+      <div class="секция-тег">// группы</div>
+      <h2 class="секция-название">Наши группы</h2>
+      <p class="секция-подзаголовок">Выберите курс для просмотра информации о группе</p>
+    </div>
+    <div class="фильтры плавное-появление">
+      <button class="кнопка-фильтр активная" data-фильтр="все">Все</button>
+      <button class="кнопка-фильтр" data-фильтр="1">1 курс</button>
+      <button class="кнопка-фильтр" data-фильтр="2">2 курс</button>
+      <button class="кнопка-фильтр" data-фильтр="3">3 курс</button>
+      <button class="кнопка-фильтр" data-фильтр="4">4 курс</button>
+    </div>
+    <div class="группы-сетка" id="сеткаГрупп"></div>
+  </div>
+</section>
+
+<!-- РАСПИСАНИЕ -->
+<section id="расписание">
+  <div class="секция-контейнер">
+    <div class="секция-заголовок плавное-появление">
+      <div class="секция-тег">// расписание</div>
+      <h2 class="секция-название">Расписание занятий</h2>
+      <p class="секция-подзаголовок">Актуальное расписание с сайта bincol.ru</p>
+    </div>
+
+    <!-- Управление расписанием -->
+    <div class="расписание-управление плавное-появление">
+      <div class="расписание-выбор-группы">
+        <button class="кнопка-фильтр активная" data-группа="isip-26-1">ИСиП-26-1</button>
+        <button class="кнопка-фильтр" data-группа="isip-26-2">ИСиП-26-2</button>
+        <button class="кнопка-фильтр" data-группа="isip-25-1">ИСиП-25-1</button>
+        <button class="кнопка-фильтр" data-группа="isip-25-2">ИСиП-25-2</button>
+      </div>
+      <div class="переключатель-недели">
+        <label>Нечётная</label>
+        <div class="переключатель">
+          <input type="checkbox" id="переключательНедели">
+          <span class="ползунок"></span>
+        </div>
+        <label>Чётная</label>
+      </div>
+      <div class="фильтры плавное-появление">
+        <button class="кнопка-фильтр активная" data-день="ponedelnik">Понедельник</button>
+        <button class="кнопка-фильтр" data-день="vtornik">Вторник</button>
+        <button class="кнопка-фильтр" data-день="sreda">Среда</button>
+        <button class="кнопка-фильтр" data-день="chetverg">Четверг</button>
+        <button class="кнопка-фильтр" data-день="pyatnitsa">Пятница</button>
+      </div>
+    </div>
+
+    <div class="таблица-расписания-обертка плавное-появление">
+      <table class="таблица-расписания">
+        <thead>
+          <tr>
+            <th>№</th>
+            <th>Время</th>
+            <th>Предмет</th>
+            <th>Преподаватель</th>
+            <th>Кабинет</th>
+          </tr>
+        </thead>
+        <tbody id="телоРасписания"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- КАБИНЕТЫ -->
+<section id="кабинеты">
+  <div class="секция-контейнер">
+    <div class="секция-заголовок плавное-появление">
+      <div class="секция-тег">// кабинеты</div>
+      <h2 class="секция-название">Кабинеты и лаборатории</h2>
+      <p class="секция-подзаголовок">Современное оборудование для обучения и практики</p>
+    </div>
+    <div class="кабинеты-сетка" id="сеткаКабинетов"></div>
+  </div>
+</section>
+
+<!-- ПРЕПОДАВАТЕЛИ -->
+<section id="преподаватели">
+  <div class="секция-контейнер">
+    <div class="секция-заголовок плавное-появление">
+      <div class="секция-тег">// преподаватели</div>
+      <h2 class="секция-название">Наши преподаватели</h2>
+      <p class="секция-подзаголовок">Опытные специалисты с реальной практикой в IT-индустрии</p>
+    </div>
+    <div class="преподаватели-сетка" id="сеткаПреподавателей"></div>
+  </div>
+</section>
+
+<!-- ФУТЕР -->
+<footer>
+  <div class="футер-контейнер">
+    <div class="футер-колонка">
+      <div class="лого" style="margin-bottom: 1rem;">
+        <div class="лого-иконка">12</div>
+        <div class="лого-текст">Индустриальный колледж <span>12 ИСиП</span></div>
+      </div>
+      <p style="color: var(--приглушенный); font-size: 0.9rem;">Индустриальный колледж 12 ИСиП. Готовим специалистов в области информационных систем и программирования с 1996 года.</p>
+    </div>
+    <div class="футер-колонка">
+      <h5>// навигация</h5>
+      <ul>
+        <li><a href="#о-нас">О нас</a></li>
+        <li><a href="#группы">Группы</a></li>
+        <li><a href="#расписание">Расписание</a></li>
+        <li><a href="#кабинеты">Кабинеты</a></li>
+      </ul>
+    </div>
+    <div class="футер-колонка">
+      <h5>// контакты</h5>
+      <ul>
+        <li><a href="tel:+70000000000">+7 (000) 000-00-00</a></li>
+        <li><a href="mailto:info@college12.ru">info@college12.ru</a></li>
+        <li><a href="#">г. Москва, ул. Примерная, 12</a></li>
+      </ul>
+    </div>
+    <div class="футер-колонка">
+      <h5>// соцсети</h5>
+      <ul>
+        <li><a href="#">ВКонтакте</a></li>
+        <li><a href="#">Telegram</a></li>
+        <li><a href="#">GitHub</a></li>
+        <li><a href="#">YouTube</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="футер-низ">
+    © 2026 Индустриальный колледж 12 ИСиП // Сделано с &lt;3 студентами
+  </div>
+</footer>
+
+<!-- МОДАЛЬНОЕ ОКНО -->
+<div class="модальное-окно" id="модальноеОкно">
+  <div class="модальное-содержимое">
+    <button class="кнопка-закрытия-модалки" id="закрытьМодалку">×</button>
+    <h3 id="заголовокМодалки">Информация</h3>
+    <div id="телоМодалки"></div>
+  </div>
+</div>
+
+<script>
+// ===== ДАННЫЕ РАСПИСАНИЯ =====
+// ⚠️ ЗАМЕНИ ЭТИ ДАННЫЕ НА РЕАЛЬНЫЕ С САЙТА bincol.ru
+// Теперь все ключи на русском (понедельник, нечетная и т.д.), чтобы было легко редактировать!
+
+const расписание = {
+  'isip-26-1': {
+    нечетная: {
+      ponedelnik: [
+        { номер: 1, время: '08:30 - 10:00', предмет: 'Программирование', преподаватель: 'Иванов И.И.', кабинет: '301' },
+        { перерыв: true, текст: 'Перерыв 15 мин' },
+        { номер: 2, время: '10:15 - 11:45', предмет: 'Базы данных', преподаватель: 'Петров П.П.', кабинет: '305' },
+        { перерыв: true, текст: 'Перерыв 30 мин' },
+        { номер: 3, время: '12:15 - 13:45', предмет: 'Английский язык', преподаватель: 'Смирнова А.В.', кабинет: '210' },
+        { перерыв: true, текст: 'Перерыв 15 мин' },
+        { номер: 4, время: '14:00 - 15:30', предмет: 'Физкультура', преподаватель: 'Орлов О.О.', кабинет: 'Спортзал' },
+      ],
+      vtornik: [
+        { номер: 1, время: '08:30 - 10:00', предмет: 'Web-разработка', преподаватель: 'Козлов К.К.', кабинет: '302' },
+        { перерыв: true, текст: 'Перерыв 15 мин' },
+        { номер: 2, время: '10:15 - 11:45', предмет: 'Алгоритмы', преподаватель: 'Морозов М.М.', кабинет: '301' },
+        { перерыв: true, текст: 'Перерыв 30 мин' },
+        { номер: 3, время: '12:15 - 13:45', предмет: 'Математика', преподаватель: 'Кузнецова Е.Е.', кабинет: '105' },
+        { перерыв: true, текст: 'Перерыв 15 мин' },
+        { номер: 4, время: '14:00 - 15:30', предмет: 'История', преподаватель: 'Лебедев Л.Л.', кабинет: '204' },
+      ],
+      sreda: [
+        { номер: 1, время: '08:30 - 10:00', предмет: 'ООП', преподаватель: 'Иванов И.И.', кабинет: '301' },
+        { перерыв: true, текст: 'Перерыв 15 мин' },
+        { номер: 2, время: '10:15 - 11:45', предмет: 'Компьютерные сети', преподаватель: 'Волков В.В.', кабинет: '303' },
+        { перерыв: true, текст: 'Перерыв 30 мин' },
+        { номер: 3, время: '12:15 - 13:45', предмет: 'Linux', преподаватель: 'Соколов С.А.', кабинет: '306' },
+        { перерыв: true, текст: 'Перерыв 15 мин' },
+        { номер: 4, время: '14:00 - 15:30', предмет: 'Проектная деятельность', преподаватель: 'Новиков Н.Н.', кабинет: '307' },
+      ],
+      chetverg: [
+        { номер: 1, время: '08:30 - 10:00', предмет: 'Frontend', преподаватель: 'Козлов К.К.', кабинет: '302' },
+        { перерыв: true, текст: 'Перерыв 15 мин' },
+        { номер: 2, время: '10:15 - 11:45', предмет: 'Backend', преподаватель: 'Морозов М.М.', кабинет: '301' },
+        { перерыв: true, текст: 'Перерыв 30 мин' },
+        { номер: 3, время: '12:15 - 13:45', предмет: 'Git и CI/CD', преподаватель: 'Соколов С.А.', кабинет: '306' },
+        { перерыв: true, текст: 'Перерыв 15 мин' },
+        { номер: 4, время: '14:00 - 15:30', предмет: 'Soft Skills', преподаватель: 'Сидоров С.С.', кабинет: '201' },
+      ],
+      pyatnitsa: [
+        { номер: 1, время: '08:30 - 10:00', предмет: 'Тестирование', преподаватель: 'Петров П.П.', кабинет: '305' },
+        { перерыв: true, текст: 'Перерыв 15 мин' },
+        { номер: 2, время: '10:15 - 11:45', предмет: 'Информационная безопасность', преподаватель: 'Волков В.В.', кабинет: '303' },
+        { перерыв: true, текст: 'Перерыв 30 мин' },
+        { номер: 3, время: '12:15 - 13:45', предмет: 'Курсовой проект', преподаватель: 'Иванов И.И.', кабинет: '301' },
+      ],
+    },
+    четная: {
+      ponedelnik: [
+        { номер: 1, время: '08:30 - 10:00', предмет: 'Математика', преподаватель: 'Кузнецова Е.Е.', кабинет: '105' },
+        { перерыв: true, текст: 'Перерыв 15 мин' },
+        { номер: 2, время: '10:15 - 11:45', предмет: 'Программирование', преподаватель: 'Иванов И.И.', кабинет: '301' },
+        { перерыв: true, текст: 'Перерыв 30 мин' },
+        { номер: 3, время: '12:15 - 13:45', предмет: 'Английский язык', преподаватель: 'Смирнова А.В.', кабинет: '210' },
+      ],
+      vtornik: [
+        { номер: 1, время: '08:30 - 10:00', предмет: 'Базы данных', преподаватель: 'Петров П.П.', кабинет: '305' },
+        { перерыв: true, текст: 'Перерыв 15 мин' },
+        { номер: 2, время: '10:15 - 11:45', предмет: 'Web-разработка', преподаватель: 'Козлов К.К.', кабинет: '302' },
+        { перерыв: true, текст: 'Перерыв 30 мин' },
+        { номер: 3, время: '12:15 - 13:45', предмет: 'Физкультура', преподаватель: 'Орлов О.О.', кабинет: 'Спортзал' },
+      ],
+      sreda: [], chetverg: [], pyatnitsa: [],
+    },
+  },
+  'isip-26-2': {
+    нечетная: { ponedelnik: [], vtornik: [], sreda: [], chetverg: [], pyatnitsa: [] },
+    четная: { ponedelnik: [], vtornik: [], sreda: [], chetverg: [], pyatnitsa: [] },
+  },
+  'isip-25-1': {
+    нечетная: { ponedelnik: [], vtornik: [], sreda: [], chetverg: [], pyatnitsa: [] },
+    четная: { ponedelnik: [], vtornik: [], sreda: [], chetverg: [], pyatnitsa: [] },
+  },
+  'isip-25-2': {
+    нечетная: { ponedelnik: [], vtornik: [], sreda: [], chetverg: [], pyatnitsa: [] },
+    четная: { ponedelnik: [], vtornik: [], sreda: [], chetverg: [], pyatnitsa: [] },
+  },
+};
+
+// ===== ОСТАЛЬНЫЕ ДАННЫЕ =====
+const группы = [
+  { имя: 'ИСиП-26-1', курс: '1 курс', фильтр: '1', специальность: 'Информационные системы', куратор: 'Иванов И.И.', студентов: 25 },
+  { имя: 'ИСиП-26-2', курс: '1 курс', фильтр: '1', специальность: 'Программирование', куратор: 'Петров П.П.', студентов: 24 },
+  { имя: 'ИСиП-25-1', курс: '2 курс', фильтр: '2', специальность: 'Информационные системы', куратор: 'Сидоров С.С.', студентов: 23 },
+  { имя: 'ИСиП-25-2', курс: '2 курс', фильтр: '2', специальность: 'Web-разработка', куратор: 'Козлов К.К.', студентов: 26 },
+  { имя: 'ИСиП-24-1', курс: '3 курс', фильтр: '3', специальность: 'Mobile-разработка', куратор: 'Новиков Н.Н.', студентов: 22 },
+  { имя: 'ИСиП-24-2', курс: '3 курс', фильтр: '3', специальность: 'Backend-разработка', куратор: 'Морозов М.М.', студентов: 21 },
+  { имя: 'ИСиП-23-1', курс: '4 курс', фильтр: '4', специальность: 'Fullstack-разработка', куратор: 'Волков В.В.', студентов: 20 },
+  { имя: 'ИСиП-23-2', курс: '4 курс', фильтр: '4', специальность: 'DevOps', куратор: 'Соколов С.А.', студентов: 19 },
+];
+
+const кабинеты = [
+  { номер: '301', название: 'Лаборатория программирования', статус: 'занят', оборудование: '25 ПК, проектор' },
+  { номер: '302', название: 'Web-лаборатория', статус: 'свободен', оборудование: '20 ПК, 4K мониторы' },
+  { номер: '303', название: 'Сетевая лаборатория', статус: 'занят', оборудование: 'Серверное оборудование' },
+  { номер: '305', название: 'Лаборатория баз данных', статус: 'свободен', оборудование: '22 ПК, Oracle, PostgreSQL' },
+  { номер: '306', название: 'Linux-класс', статус: 'свободен', оборудование: '20 ПК, Ubuntu, CentOS' },
+  { номер: '307', название: 'Коворкинг / проектная', статус: 'свободен', оборудование: 'Зоны для командной работы' },
+  { номер: '210', название: 'Лингафонный кабинет', статус: 'занят', оборудование: 'Аудио-оборудование' },
+  { номер: '105', название: 'Математический класс', статус: 'свободен', оборудование: 'Интерактивная доска' },
+];
+
+const преподаватели = [
+  { имя: 'Иванов Иван Иванович', предмет: 'Программирование, ООП', опыт: '15 лет опыта, Python/C++', инициалы: 'ИИ' },
+  { имя: 'Петров Пётр Петрович', предмет: 'Базы данных, Тестирование', опыт: '12 лет, SQL/NoSQL эксперт', инициалы: 'ПП' },
+  { имя: 'Сидоров Сергей Сергеевич', предмет: 'Soft Skills, Менеджмент', опыт: '10 лет, Scrum Master', инициалы: 'СС' },
+  { имя: 'Козлов Константин Константинович', предмет: 'Web, Frontend', опыт: '8 лет, React/Vue разработчик', инициалы: 'КК' },
+  { имя: 'Новиков Никита Николаевич', предмет: 'Mobile-разработка', опыт: '7 лет, Kotlin/Swift', инициалы: 'НН' },
+  { имя: 'Морозов Михаил Михайлович', предмет: 'Backend, Алгоритмы', опыт: '11 лет, Java/Go', инициалы: 'ММ' },
+  { имя: 'Волков Виктор Викторович', предмет: 'Fullstack, Сети', опыт: '9 лет, Node.js, CCNA', инициалы: 'ВВ' },
+  { имя: 'Соколов Сергей Александрович', предмет: 'Linux, DevOps', опыт: '10 лет, Docker/K8s', инициалы: 'СА' },
+];
+
+// ===== ТЕКУЩЕЕ СОСТОЯНИЕ РАСПИСАНИЯ =====
+let текущаяГруппа = 'isip-26-1';
+let текущаяНеделя = 'нечетная'; // 'нечетная' или 'четная'
+let текущийДень = 'ponedelnik';
+
+// ===== ОТРИСОВКА ГРУПП =====
+function отобразитьГруппы(фильтр = 'все') {
+  const сетка = document.getElementById('сеткаГрупп');
+  const отфильтрованные = фильтр === 'все' ? группы : группы.filter(г => г.фильтр === фильтр);
+  сетка.innerHTML = отфильтрованные.map(г => `
+    <div class="группа-карточка" data-имя="${г.имя}">
+      <div class="группа-шапка">
+        <div class="группа-имя">${г.имя}</div>
+        <div class="группа-курс">${г.курс}</div>
+      </div>
+      <div class="группа-инфо">
+        <div>📚 ${г.специальность}</div>
+        <div>👨‍🏫 ${г.куратор}</div>
+        <div>👥 ${г.студентов} студентов</div>
+      </div>
+    </div>
+  `).join('');
+  
+  document.querySelectorAll('.группа-карточка').forEach(карточка => {
+    карточка.addEventListener('click', () => открытьМодалку(карточка.dataset.имя, 'группа'));
+  });
+}
+
+// ===== ОТРИСОВКА РАСПИСАНИЯ =====
+function отобразитьРасписание() {
+  const тело = document.getElementById('телоРасписания');
+  const данные = расписание[текущаяГруппа]?.[текущаяНеделя]?.[текущийДень];
+
+  if (!данные || данные.length === 0) {
+    тело.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--приглушенный); padding: 2rem;">Нет занятий в этот день</td></tr>`;
+    return;
+  }
+
+  тело.innerHTML = данные.map(элемент => {
+    if (элемент.перерыв) {
+      return `<tr class="строка-перерыва"><td colspan="5">☕ ${элемент.текст}</td></tr>`;
+    }
+    return `
+      <tr>
+        <td>${элемент.номер}</td>
+        <td class="время-пары">${элемент.время}</td>
+        <td class="название-пары">${элемент.предмет}</td>
+        <td>${элемент.преподаватель}</td>
+        <td><span class="номер-кабинета">каб. ${элемент.кабинет}</span></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// ===== ОТРИСОВКА КАБИНЕТОВ =====
+function отобразитьКабинеты() {
+  const сетка = document.getElementById('сеткаКабинетов');
+  сетка.innerHTML = кабинеты.map(к => `
+    <div class="кабинет-карточка" data-номер="${к.номер}">
+      <div class="номер-кабинета-крупно">${к.номер}</div>
+      <div class="название-кабинета">${к.название}</div>
+      <div style="color: var(--приглушенный); font-size: 0.85rem;">${к.оборудование}</div>
+      <div class="статус-кабинета ${к.статус}">${к.статус === 'свободен' ? 'Свободен' : 'Занят'}</div>
+    </div>
+  `).join('');
+  
+  document.querySelectorAll('.кабинет-карточка').forEach(карточка => {
+    карточка.addEventListener('click', () => открытьМодалку(карточка.dataset.номер, 'кабинет'));
+  });
+}
+
+// ===== ОТРИСОВКА ПРЕПОДАВАТЕЛЕЙ =====
+function отобразитьПреподавателей() {
+  const сетка = document.getElementById('сеткаПреподавателей');
+  сетка.innerHTML = преподаватели.map(п => `
+    <div class="преподаватель-карточка">
+      <div class="преподаватель-аватар">${п.инициалы}</div>
+      <div class="преподаватель-инфо">
+        <h4>${п.имя}</h4>
+        <div class="предмет">${п.предмет}</div>
+        <div class="опыт">${п.опыт}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== МОДАЛЬНОЕ ОКНО =====
+function открытьМодалку(ид, тип) {
+  const модалка = document.getElementById('модальноеОкно');
+  const заголовок = document.getElementById('заголовокМодалки');
+  const тело = document.getElementById('телоМодалки');
+  
+  if (тип === 'группа') {
+    const г = группы.find(х => х.имя === ид);
+    заголовок.textContent = `Группа ${г.имя}`;
+    тело.innerHTML = `
+      <p><strong>Курс:</strong> ${г.курс}</p>
+      <p><strong>Специальность:</strong> ${г.специальность}</p>
+      <p><strong>Куратор:</strong> ${г.куратор}</p>
+      <p><strong>Количество студентов:</strong> ${г.студентов}</p>
+    `;
+  } else if (тип === 'кабинет') {
+    const к = кабинеты.find(х => х.номер === ид);
+    заголовок.textContent = `Кабинет ${к.номер}`;
+    тело.innerHTML = `
+      <p><strong>Название:</strong> ${к.название}</p>
+      <p><strong>Оборудование:</strong> ${к.оборудование}</p>
+      <p><strong>Статус:</strong> ${к.статус === 'свободен' ? 'Свободен' : 'Занят'}</p>
+    `;
+  }
+  модалка.classList.add('активно');
+}
+
+document.getElementById('закрытьМодалку').addEventListener('click', () => {
+  document.getElementById('модальноеОкно').classList.remove('активно');
+});
+document.getElementById('модальноеОкно').addEventListener('click', (е) => {
+  if (е.target.id === 'модальноеОкно') е.currentTarget.classList.remove('активно');
+});
+
+// ===== ОБРАБОТЧИКИ СОБЫТИЙ =====
+
+// Фильтры групп
+document.querySelectorAll('[data-фильтр]').forEach(кнопка => {
+  кнопка.addEventListener('click', () => {
+    document.querySelectorAll('[data-фильтр]').forEach(б => б.classList.remove('активная'));
+    кнопка.classList.add('активная');
+    отобразитьГруппы(кнопка.dataset.фильтр);
+  });
+});
+
+// Переключение группы в расписании
+document.querySelectorAll('[data-группа]').forEach(кнопка => {
+  кнопка.addEventListener('click', () => {
+    document.querySelectorAll('[data-группа]').forEach(б => б.classList.remove('активная'));
+    кнопка.classList.add('активная');
+    текущаяГруппа = кнопка.dataset.группа;
+    отобразитьРасписание();
+  });
+});
+
+// Переключение недели
+document.getElementById('переключательНедели').addEventListener('change', (е) => {
+  текущаяНеделя = е.target.checked ? 'четная' : 'нечетная';
+  отобразитьРасписание();
+});
+
+// Переключение дней
+document.querySelectorAll('[data-день]').forEach(кнопка => {
+  кнопка.addEventListener('click', () => {
+    document.querySelectorAll('[data-день]').forEach(б => б.classList.remove('активная'));
+    кнопка.classList.add('активная');
+    текущийДень = кнопка.dataset.день;
+    отобразитьРасписание();
+  });
+});
+
+// Смена темы
+const кнопкаТемы = document.getElementById('кнопкаТемы');
+кнопкаТемы.addEventListener('click', () => {
+  const текущая = document.documentElement.getAttribute('data-theme');
+  const следующая = текущая === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', следующая);
+  кнопкаТемы.textContent = следующая === 'light' ? '☀️' : '🌙';
+});
+
+// Мобильное меню
+document.getElementById('кнопкаМеню').addEventListener('click', () => {
+  document.getElementById('менюНавигации').classList.toggle('активно');
+});
+document.querySelectorAll('nav a').forEach(ссылка => {
+  ссылка.addEventListener('click', () => document.getElementById('менюНавигации').classList.remove('активно'));
+});
+
+// Анимация печати в терминале
+const строкиТерминала = [
+  { приглашение: 'student@college:~$ ', команда: 'whoami' },
+  { вывод: '→ Студент группы ИСиП-26-1' },
+  { приглашение: 'student@college:~$ ', команда: 'cat миссия.txt' },
+  { вывод: '→ Учим кодить. Создаём будущее.' },
+  { приглашение: 'student@college:~$ ', команда: 'ls навыки/' },
+  { вывод: '→ python/ javascript/ java/ sql/ git/' },
+  { приглашение: 'student@college:~$ ', команда: 'echo "Добро пожаловать!"' },
+  { успех: '→ Добро пожаловать в Индустриальный колледж 12 ИСиП!' },
+];
+let индексСтроки = 0, индексСимвола = 0, этоКоманда = true;
+const телоТерминала = document.getElementById('терминалТело');
+
+function печататьВТерминале() {
+  if (индексСтроки >= строкиТерминала.length) {
+    setTimeout(() => {
+      телоТерминала.innerHTML = '<div class="терминал-строка"><span class="приглашение">student@college:~$</span> <span class="курсор"></span></div>';
+      индексСтроки = 0; индексСимвола = 0; этоКоманда = true;
+      setTimeout(печататьВТерминале, 1000);
+    }, 2000);
+    return;
+  }
+  const строка = строкиТерминала[индексСтроки];
+  if (этоКоманда) {
+    if (!document.getElementById('печатающая-строка')) {
+      const див = document.createElement('div');
+      див.className = 'терминал-строка';
+      див.id = 'печатающая-строка';
+      див.innerHTML = `<span class="приглашение">${строка.приглашение}</span><span class="команда" id="печатающая-команда"></span><span class="курсор"></span>`;
+      телоТерминала.appendChild(див);
+    }
+    const элементКоманды = document.getElementById('печатающая-команда');
+    if (индексСимвола < строка.команда.length) {
+      элементКоманды.textContent += строка.команда[индексСимвола];
+      индексСимвола++;
+      setTimeout(печататьВТерминале, 50 + Math.random() * 50);
+    } else {
+      этоКоманда = false;
+      setTimeout(печататьВТерминале, 300);
+    }
+  } else {
+    const печатающаяСтрока = document.getElementById('печатающая-строка');
+    печатающаяСтрока.removeAttribute('id');
+    const курсор = печатающаяСтрока.querySelector('.курсор');
+    if (курсор) курсор.remove();
+    const элементКоманды = печатающаяСтрока.querySelector('.команда');
+    if (элементКоманды) элементКоманды.removeAttribute('id');
+
+    const дивВывода = document.createElement('div');
+    дивВывода.className = 'терминал-строка';
+    if (строка.вывод) дивВывода.innerHTML = `<span class="вывод">${строка.вывод}</span>`;
+    else if (строка.успех) дивВывода.innerHTML = `<span class="успех">${строка.успех}</span>`;
+    телоТерминала.appendChild(дивВывода);
+
+    индексСтроки++; индексСимвола = 0; этоКоманда = true;
+    setTimeout(печататьВТерминале, 400);
+  }
+}
+
+// Анимация чисел
+function анимироватьЧисла() {
+  document.querySelectorAll('.стат-число').forEach(элемент => {
+    const цель = +элемент.dataset.цель;
+    let текущее = 0;
+    const шаг = цель / 60;
+    const таймер = setInterval(() => {
+      текущее += шаг;
+      if (текущее >= цель) { текущее = цель; clearInterval(таймер); }
+      элемент.textContent = Math.floor(текущее);
+    }, 20);
+  });
+}
+
+// Наблюдатель за появлением элементов при прокрутке
+const наблюдатель = new IntersectionObserver((записи) => {
+  записи.forEach(запись => {
+    if (запись.isIntersecting) {
+      запись.target.classList.add('видимый');
+      if (запись.target.querySelector('.стат-число')) анимироватьЧисла();
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.плавное-появление').forEach(элемент => наблюдатель.observe(элемент));
+
+// Матричный фон
+const холст = document.getElementById('матрица');
+const контекст = холст.getContext('2d');
+function изменитьРазмерХолста() {
+  холст.width = window.innerWidth;
+  холст.height = window.innerHeight;
+}
+изменитьРазмерХолста();
+window.addEventListener('resize', изменитьРазмерХолста);
+const символы = '01アイウエオカキクケコサシスセソタチツテト{}[]<>/\\|;:=+*#$%^&';
+const размерШрифта = 14;
+let колонки = Math.floor(холст.width / размерШрифта);
+const капли = Array(колонки).fill(1);
+
+function рисоватьМатрицу() {
+  контекст.fillStyle = 'rgba(10, 14, 26, 0.05)';
+  контекст.fillRect(0, 0, холст.width, холст.height);
+  контекст.fillStyle = '#00ffa3';
+  контекст.font = размерШрифта + 'px monospace';
+  for (let i = 0; i < капли.length; i++) {
+    const текст = символы[Math.floor(Math.random() * символы.length)];
+    контекст.fillText(текст, i * размерШрифта, капли[i] * размерШрифта);
+    if (капли[i] * размерШрифта > холст.height && Math.random() > 0.975) капли[i] = 0;
+    капли[i]++;
+  }
+}
+setInterval(рисоватьМатрицу, 50);
+window.addEventListener('resize', () => {
+  колонки = Math.floor(холст.width / размерШрифта);
+  капли.length = колонки;
+  капли.fill(1);
+});
+
+// ===== ЗАПУСК ПРИ ЗАГРУЗКЕ =====
+отобразитьГруппы();
+отобразитьРасписание();
+отобразитьКабинеты();
+отобразитьПреподавателей();
+setTimeout(печататьВТерминале, 500);
+</script>
+</body>
+</html>
